@@ -1,0 +1,292 @@
+DROP TABLE ess
+/*European Social Survey data was used for exploratory analysis
+CREATE TABLE ess (
+ctry VARCHAR(50),
+cname VARCHAR(50),
+cedition INT,
+cproddat VARCHAR(50),
+cseqno INT,
+name VARCHAR(50),
+essround SMALLINT,
+edition DECIMAL(19,14),
+idno VARCHAR(50),
+polintr INT DEFAULT NULL,
+lrscale INT DEFAULT NULL,
+idKey INT NOT NULL AUTO_INCREMENT,
+PRIMARY KEY(idKey),
+INDEX name_idx (idKey)
+)
+ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOAD DATA INFILE '/var/lib/mysql-files/ESSSurvey.csv'
+INTO TABLE ess
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"' 
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+/*Average lrscale by country and ESS round
+77 Refusal
+88 Don't know
+99 No answer*/
+SELECT ctry, AVG(lrscale) as leftright
+FROM ess
+WHERE (lrscale >=0) AND (lrscale <= 10)
+GROUP BY ctry
+ORDER BY leftright;
+
+
+/*Create Table Wahlkreisdaten
+DROP TABLE wahlkreis
+CREATE TABLE wahlkreis(
+datum VARCHAR(50),
+dg VARCHAR(50),
+wahlkreisname VARCHAR(50)
+jahr INT,
+wahlberechtigte INT,
+wahlbeteiligung DECIMAL(3,1),
+zweitstimmen INT,
+cducsu INT,
+spd INT,
+gruene INT,
+fdp INT,
+linke INT,
+afd INT(50),
+sonstige INT(50),
+idKey INT NOT NULL AUTO_INCREMENT,
+PRIMARY KEY(idKey),
+INDEX name_idx (idKey)
+)
+ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+LOAD DATA INFILE 'C://ProgramData//MySQL//MySQL Server 8.0//Uploads//Walhkreis09-13-17.csv'
+INTO TABLE wahlkreis
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"' 
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+
+/* Create table from Wahlkreisdaten
+DROP TABLE wahlkreis;
+
+CREATE TABLE wahlkreis(
+datum VARCHAR(50) DEFAULT NULL,
+wahlkreiscode VARCHAR(50) DEFAULT NULL,
+wahlkreisname VARCHAR(50) DEFAULT NULL,
+jahr VARCHAR(50) DEFAULT NULL,
+wahlberechtigte VARCHAR(50) DEFAULT NULL,
+wahlbeteiligung VARCHAR(50) DEFAULT NULL,
+zweitstimmen VARCHAR(50) DEFAULT NULL,
+cducsu VARCHAR(50) DEFAULT NULL,
+spd VARCHAR(50) DEFAULT NULL,
+gruene VARCHAR(50) DEFAULT NULL,
+fdp VARCHAR(50) DEFAULT NULL,
+linke VARCHAR(50) DEFAULT NULL,
+afd VARCHAR(50) DEFAULT NULL,
+sonstige VARCHAR(50) DEFAULT NULL,
+idKey INT AUTO_INCREMENT,
+PRIMARY KEY(idKey),
+INDEX name_idx (idKey)
+)
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+LOAD DATA INFILE 'C://ProgramData//MySQL//MySQL Server 8.0//Uploads//Wahlkreis09-13-17.csv'
+INTO TABLE wahlkreis
+FIELDS TERMINATED BY '\t'
+ENCLOSED BY '"' 
+LINES TERMINATED BY '\n'
+IGNORE 9 ROWS
+(datum, wahlkreiscode, wahlkreisname, jahr, wahlberechtigte, wahlbeteiligung, zweitstimmen, cducsu, spd, gruene, fdp, linke, afd, sonstige)
+;
+
+/* Create table from Wanderungsstatistiken
+DROP TABLE wanderung;
+
+CREATE TABLE wanderung (
+    wahlkreiscode VARCHAR(50) DEFAULT NULL,
+    wahlkreisname VARCHAR(50) DEFAULT NULL,
+    jahr VARCHAR(50) DEFAULT NULL,
+    altersgruppe VARCHAR(50) DEFAULT NULL,
+    gesamtzuzuege VARCHAR(50) DEFAULT NULL,
+    zuzuege_m VARCHAR(50) DEFAULT NULL,
+    zuzuege_f VARCHAR(50) DEFAULT NULL,
+    gesamtfortzuege VARCHAR(50) DEFAULT NULL,
+    fortzuege_m VARCHAR(50) DEFAULT NULL,
+    fortzuege_f VARCHAR(50) DEFAULT NULL,
+    idKey INT AUTO_INCREMENT,
+    PRIMARY KEY (idKey),
+    INDEX name_idx (idKey)
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
+
+
+LOAD DATA INFILE 'C://ProgramData//MySQL//MySQL Server 8.0//Uploads//Wanderung2017.csv'
+INTO TABLE wanderung
+FIELDS TERMINATED BY '\t'
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 10 ROWS
+(wahlkreiscode,wahlkreisname,jahr,altersgruppe,gesamtzuzuege,zuzuege_m,zuzuege_f,gesamtfortzuege,fortzuege_m,fortzuege_f)
+;
+
+SHOW COLUMNS FROM wanderung;
+
+/*This gives us population statistics for the population denstiy calculation
+DROP TABLE bevoelkerung;
+
+CREATE TABLE bevoelkerung (
+    wahlkreiscode VARCHAR(50) DEFAULT NULL,
+    wahlkreisname VARCHAR(50) DEFAULT NULL,
+    gesamt17 VARCHAR(50) DEFAULT NULL,
+    m17 VARCHAR(50) DEFAULT NULL,
+    f17 VARCHAR(50) DEFAULT NULL,
+    gesamt16 VARCHAR(50) DEFAULT NULL,
+    m16 VARCHAR(50) DEFAULT NULL,
+    f16 VARCHAR(50) DEFAULT NULL,
+	gesamt15 VARCHAR(50) DEFAULT NULL,
+    m15 VARCHAR(50) DEFAULT NULL,
+    f15 VARCHAR(50) DEFAULT NULL,
+	gesamt14 VARCHAR(50) DEFAULT NULL,
+    m14 VARCHAR(50) DEFAULT NULL,
+    f14 VARCHAR(50) DEFAULT NULL,
+	gesamt13 VARCHAR(50) DEFAULT NULL,
+    m13 VARCHAR(50) DEFAULT NULL,
+    f13 VARCHAR(50) DEFAULT NULL,
+	gesamt12 VARCHAR(50) DEFAULT NULL,
+    m12 VARCHAR(50) DEFAULT NULL,
+    f12 VARCHAR(50) DEFAULT NULL,
+	gesamt11 VARCHAR(50) DEFAULT NULL,
+    m11 VARCHAR(50) DEFAULT NULL,
+    f11 VARCHAR(50) DEFAULT NULL,
+	gesamt10 VARCHAR(50) DEFAULT NULL,
+    m10 VARCHAR(50) DEFAULT NULL,
+    f10 VARCHAR(50) DEFAULT NULL,
+	gesamt09 VARCHAR(50) DEFAULT NULL,
+    m09 VARCHAR(50) DEFAULT NULL,
+    f09 VARCHAR(50) DEFAULT NULL,
+	gesamt08 VARCHAR(50) DEFAULT NULL,
+    m08 VARCHAR(50) DEFAULT NULL,
+    f08 VARCHAR(50) DEFAULT NULL,
+	gesamt07 VARCHAR(50) DEFAULT NULL,
+    m07 VARCHAR(50) DEFAULT NULL,
+    f07 VARCHAR(50) DEFAULT NULL,
+	gesamt06 VARCHAR(50) DEFAULT NULL,
+    m06 VARCHAR(50) DEFAULT NULL,
+    f06 VARCHAR(50) DEFAULT NULL,	
+    idKey INT AUTO_INCREMENT,
+    PRIMARY KEY (idKey),
+    INDEX name_idx (idKey)
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
+
+
+LOAD DATA INFILE 'C://ProgramData//MySQL//MySQL Server 8.0//Uploads//Bevoelkerung0617.csv'
+INTO TABLE bevoelkerung
+FIELDS TERMINATED BY '\t'
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 8 ROWS
+(wahlkreiscode, wahlkreisname, gesamt17, m17, f17, gesamt16, m16, f16,  gesamt15, m15, f15,  gesamt14, m14, f14,  gesamt13, m13, f13,  gesamt12, m12, f12,  gesamt11, m11, f11,  gesamt10, m10, f10,  gesamt09, m09, f09,  gesamt08, m08, f08,  gesamt07, m07, f07,  gesamt06, m06, f06)
+;
+
+/*In order to get population density, we need surface area of the different voting districts
+DROP TABLE flaeche;
+CREATE TABLE flaeche (
+	datum VARCHAR(50) DEFAULT NULL,
+    wahlkreiscode VARCHAR(50) DEFAULT NULL,
+    wahlkreisname VARCHAR(50) DEFAULT NULL,
+    flaeche VARCHAR(50) DEFAULT NULL,	
+    idKey INT AUTO_INCREMENT,
+    PRIMARY KEY (idKey),
+    INDEX name_idx (idKey)
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
+
+
+LOAD DATA INFILE 'C://ProgramData//MySQL//MySQL Server 8.0//Uploads//Flaeche.csv'
+INTO TABLE flaeche
+FIELDS TERMINATED BY '\t'
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 6 ROWS
+(datum, wahlkreiscode, wahlkreisname, flaeche);
+
+
+
+/*Attempted first join 
+SELECT w1.wahlkreiscode, w1.wahlkreisname, w1.jahr, w2.jahr AS Jahr2, (w1.afd/w1.zweitstimmen*100) AS AfDPercent, (w2.gesamtfortzuege-w2.gesamtzuzuege) AS netfortzuege
+FROM wahlkreis AS w1
+JOIN wanderung AS w2 ON w1.wahlkreiscode = w2.wahlkreiscode
+WHERE (w1.wahlkreisname NOT LIKE '%stadt%') AND (w1.wahlkreiscode > 999)
+ORDER BY netfortzuege DESC
+LIMIT 5;
+
+/*Landkreise from same year and age 18-25
+SELECT w1.wahlkreiscode, w1.wahlkreisname, w1.jahr,w2.altersgruppe, (w1.afd/w1.zweitstimmen*100) AS AfDPercent, (w2.gesamtfortzuege-w2.gesamtzuzuege) AS netfortzuege
+FROM wahlkreis AS w1
+JOIN wanderung AS w2 ON w1.wahlkreiscode = w2.wahlkreiscode
+WHERE (w1.wahlkreisname LIKE '%Landkreis%') AND (w1.wahlkreiscode > 999) AND (w1.jahr = w2.jahr) AND (altersgruppe = '18 bis unter 25 Jahre')
+ORDER BY netfortzuege DESC
+LIMIT 50;
+
+/*Landkreise average net fortzuege for four years prior to 2017 
+SELECT wahlkreiscode, wahlkreisname, AVG((gesamtfortzuege-gesamtzuzuege)) AS AvgNetFortzuege
+FROM wanderung
+WHERE wahlkreiscode > 999
+GROUP BY wahlkreiscode
+ORDER BY AvgNetFortzuege DESC
+LIMIT 50;
+
+/*Landkreise average net fortzuege for for years prior to 2017 with afd vote share
+SELECT w1.wahlkreiscode, w1.wahlkreisname, (w1.afd/w1.zweitstimmen*100) AS AfDPercent, AVG(w2.gesamtfortzuege-w2.gesamtzuzuege) AS avgnetfortzuege
+FROM wahlkreis AS w1
+JOIN wanderung AS w2 ON w1.wahlkreiscode = w2.wahlkreiscode
+WHERE (w1.wahlkreisname NOT LIKE '%stadt%') AND (w1.wahlkreiscode > 999) AND (w1.jahr = 2017) AND (w2.jahr >2013)
+GROUP BY w1.wahlkreiscode
+ORDER BY avgnetfortzuege DESC
+LIMIT 10; 
+
+/*Landkreise average percentual yearly fortzuege (2014-2017) by 2013 population with AfD Vote Share
+SELECT w1.wahlkreiscode, w1.wahlkreisname, (w1.afd/w1.zweitstimmen*100) AS AfDPercent, 
+	AVG(w2.gesamtfortzuege-w2.gesamtzuzuege) AS avgnetfortzuege,
+	(AVG(w2.gesamtfortzuege)-AVG(w2.gesamtzuzuege))/AVG(b.gesamt13)*100 AS avgnetfortzuegeprozent
+FROM wahlkreis AS w1
+JOIN wanderung AS w2 ON w1.wahlkreiscode = w2.wahlkreiscode
+JOIN bevoelkerung AS b ON w1.wahlkreiscode = w2.wahlkreiscode
+WHERE (w1.wahlkreisname LIKE '%kreis%') 
+	AND (w1.wahlkreiscode > 999) 
+	AND (w1.jahr = 2017) 
+	AND (w2.jahr >2013)
+    AND ((w2.altersgruppe = '18 bis unter 25 Jahre') OR (w2.altersgruppe = '25 bis unter 30 Jahre'))
+GROUP BY w1.wahlkreiscode
+ORDER BY avgnetfortzuegeprozent DESC
+LIMIT 50; 
+
+/*Find all regions with population density below 300 Einwohner per km^2
+SELECT b.wahlkreisname, b.gesamt17/f.flaeche AS PopDensity
+FROM bevoelkerung AS b
+JOIN flaeche AS f ON b.wahlkreiscode = f.wahlkreiscode
+AND (b.gesamt17/f.flaeche < 300)
+ORDER BY PopDensity DESC
+LIMIT 100;
+
+/*Find all regions with population density below 300 Einwohner per km^2
+SELECT w1.wahlkreiscode, w1.wahlkreisname, (w1.afd/w1.zweitstimmen*100) AS AfDPercent, 
+	AVG(w2.gesamtfortzuege-w2.gesamtzuzuege) AS avgnetfortzuege,
+	(AVG(w2.gesamtfortzuege)-AVG(w2.gesamtzuzuege))/AVG(b.gesamt13)*100 AS avgnetfortzuegeprozent
+FROM wahlkreis AS w1
+JOIN wanderung AS w2 ON w1.wahlkreiscode = w2.wahlkreiscode
+JOIN bevoelkerung AS b ON w1.wahlkreiscode = b.wahlkreiscode
+JOIN flaeche AS f ON w1.wahlkreiscode = f.wahlkreiscode
+WHERE (w1.wahlkreisname LIKE '%kreis%') 
+	AND (b.gesamt17/f.flaeche < 300)
+	AND (w1.wahlkreiscode > 999) 
+	AND (w1.jahr = 2017) 
+	AND (w2.jahr >2013)
+    AND ((w2.altersgruppe = '18 bis unter 25 Jahre') OR (w2.altersgruppe = '25 bis unter 30 Jahre') OR (w2.altersgruppe = '30 bis unter 50 Jahre'))
+GROUP BY w1.wahlkreiscode
+ORDER BY avgnetfortzuegeprozent DESC
+INTO OUTFILE 'C://ProgramData//MySQL//MySQL Server 8.0//Uploads//JuneRankingsPitchers.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY "\n";

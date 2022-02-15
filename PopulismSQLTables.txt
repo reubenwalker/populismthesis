@@ -1,0 +1,212 @@
+DROP TABLE ess
+/*European Social Survey data was used for exploratory analysis
+CREATE TABLE ess (
+ctry VARCHAR(50),
+cname VARCHAR(50),
+cedition INT,
+cproddat VARCHAR(50),
+cseqno INT,
+name VARCHAR(50),
+essround SMALLINT,
+edition DECIMAL(19,14),
+idno VARCHAR(50),
+polintr INT DEFAULT NULL,
+lrscale INT DEFAULT NULL,
+idKey INT NOT NULL AUTO_INCREMENT,
+PRIMARY KEY(idKey),
+INDEX name_idx (idKey)
+)
+ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOAD DATA INFILE '/var/lib/mysql-files/ESSSurvey.csv'
+INTO TABLE ess
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"' 
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+/*Average lrscale by country and ESS round
+77 Refusal
+88 Don't know
+99 No answer*/
+SELECT ctry, AVG(lrscale) as leftright
+FROM ess
+WHERE (lrscale >=0) AND (lrscale <= 10)
+GROUP BY ctry
+ORDER BY leftright;
+
+
+/*Create Table Wahlkreisdaten
+DROP TABLE wahlkreis
+CREATE TABLE wahlkreis(
+datum VARCHAR(50),
+dg VARCHAR(50),
+wahlkreisname VARCHAR(50)
+jahr INT,
+wahlberechtigte INT,
+wahlbeteiligung DECIMAL(3,1),
+zweitstimmen INT,
+cducsu INT,
+spd INT,
+gruene INT,
+fdp INT,
+linke INT,
+afd INT(50),
+sonstige INT(50),
+idKey INT NOT NULL AUTO_INCREMENT,
+PRIMARY KEY(idKey),
+INDEX name_idx (idKey)
+)
+ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+LOAD DATA INFILE 'C://ProgramData//MySQL//MySQL Server 8.0//Uploads//Walhkreis09-13-17.csv'
+INTO TABLE wahlkreis
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"' 
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+
+/* Create table from Wahlkreisdaten
+DROP TABLE wahlkreis;
+
+CREATE TABLE wahlkreis(
+datum VARCHAR(50) DEFAULT NULL,
+wahlkreiscode VARCHAR(50) DEFAULT NULL,
+wahlkreisname VARCHAR(50) DEFAULT NULL,
+jahr VARCHAR(50) DEFAULT NULL,
+wahlberechtigte VARCHAR(50) DEFAULT NULL,
+wahlbeteiligung VARCHAR(50) DEFAULT NULL,
+zweitstimmen VARCHAR(50) DEFAULT NULL,
+cducsu VARCHAR(50) DEFAULT NULL,
+spd VARCHAR(50) DEFAULT NULL,
+gruene VARCHAR(50) DEFAULT NULL,
+fdp VARCHAR(50) DEFAULT NULL,
+linke VARCHAR(50) DEFAULT NULL,
+afd VARCHAR(50) DEFAULT NULL,
+sonstige VARCHAR(50) DEFAULT NULL,
+idKey INT AUTO_INCREMENT,
+PRIMARY KEY(idKey),
+INDEX name_idx (idKey)
+)
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+LOAD DATA INFILE 'C://ProgramData//MySQL//MySQL Server 8.0//Uploads//Wahlkreis09-13-17.csv'
+INTO TABLE wahlkreis
+FIELDS TERMINATED BY '\t'
+ENCLOSED BY '"' 
+LINES TERMINATED BY '\n'
+IGNORE 9 ROWS
+(datum, wahlkreiscode, wahlkreisname, jahr, wahlberechtigte, wahlbeteiligung, zweitstimmen, cducsu, spd, gruene, fdp, linke, afd, sonstige)
+;
+
+/* Create table from Wanderungsstatistiken
+DROP TABLE wanderung;
+
+CREATE TABLE wanderung (
+    wahlkreiscode VARCHAR(50) DEFAULT NULL,
+    wahlkreisname VARCHAR(50) DEFAULT NULL,
+    jahr VARCHAR(50) DEFAULT NULL,
+    altersgruppe VARCHAR(50) DEFAULT NULL,
+    gesamtzuzuege VARCHAR(50) DEFAULT NULL,
+    zuzuege_m VARCHAR(50) DEFAULT NULL,
+    zuzuege_f VARCHAR(50) DEFAULT NULL,
+    gesamtfortzuege VARCHAR(50) DEFAULT NULL,
+    fortzuege_m VARCHAR(50) DEFAULT NULL,
+    fortzuege_f VARCHAR(50) DEFAULT NULL,
+    idKey INT AUTO_INCREMENT,
+    PRIMARY KEY (idKey),
+    INDEX name_idx (idKey)
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
+
+
+LOAD DATA INFILE 'C://ProgramData//MySQL//MySQL Server 8.0//Uploads//Wanderung2017.csv'
+INTO TABLE wanderung
+FIELDS TERMINATED BY '\t'
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 10 ROWS
+(wahlkreiscode,wahlkreisname,jahr,altersgruppe,gesamtzuzuege,zuzuege_m,zuzuege_f,gesamtfortzuege,fortzuege_m,fortzuege_f)
+;
+
+SHOW COLUMNS FROM wanderung;
+
+/*This gives us population statistics for the population denstiy calculation
+DROP TABLE bevoelkerung;
+
+CREATE TABLE bevoelkerung (
+    wahlkreiscode VARCHAR(50) DEFAULT NULL,
+    wahlkreisname VARCHAR(50) DEFAULT NULL,
+    gesamt17 VARCHAR(50) DEFAULT NULL,
+    m17 VARCHAR(50) DEFAULT NULL,
+    f17 VARCHAR(50) DEFAULT NULL,
+    gesamt16 VARCHAR(50) DEFAULT NULL,
+    m16 VARCHAR(50) DEFAULT NULL,
+    f16 VARCHAR(50) DEFAULT NULL,
+	gesamt15 VARCHAR(50) DEFAULT NULL,
+    m15 VARCHAR(50) DEFAULT NULL,
+    f15 VARCHAR(50) DEFAULT NULL,
+	gesamt14 VARCHAR(50) DEFAULT NULL,
+    m14 VARCHAR(50) DEFAULT NULL,
+    f14 VARCHAR(50) DEFAULT NULL,
+	gesamt13 VARCHAR(50) DEFAULT NULL,
+    m13 VARCHAR(50) DEFAULT NULL,
+    f13 VARCHAR(50) DEFAULT NULL,
+	gesamt12 VARCHAR(50) DEFAULT NULL,
+    m12 VARCHAR(50) DEFAULT NULL,
+    f12 VARCHAR(50) DEFAULT NULL,
+	gesamt11 VARCHAR(50) DEFAULT NULL,
+    m11 VARCHAR(50) DEFAULT NULL,
+    f11 VARCHAR(50) DEFAULT NULL,
+	gesamt10 VARCHAR(50) DEFAULT NULL,
+    m10 VARCHAR(50) DEFAULT NULL,
+    f10 VARCHAR(50) DEFAULT NULL,
+	gesamt09 VARCHAR(50) DEFAULT NULL,
+    m09 VARCHAR(50) DEFAULT NULL,
+    f09 VARCHAR(50) DEFAULT NULL,
+	gesamt08 VARCHAR(50) DEFAULT NULL,
+    m08 VARCHAR(50) DEFAULT NULL,
+    f08 VARCHAR(50) DEFAULT NULL,
+	gesamt07 VARCHAR(50) DEFAULT NULL,
+    m07 VARCHAR(50) DEFAULT NULL,
+    f07 VARCHAR(50) DEFAULT NULL,
+	gesamt06 VARCHAR(50) DEFAULT NULL,
+    m06 VARCHAR(50) DEFAULT NULL,
+    f06 VARCHAR(50) DEFAULT NULL,	
+    idKey INT AUTO_INCREMENT,
+    PRIMARY KEY (idKey),
+    INDEX name_idx (idKey)
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
+
+
+LOAD DATA INFILE 'C://ProgramData//MySQL//MySQL Server 8.0//Uploads//Bevoelkerung0617.csv'
+INTO TABLE bevoelkerung
+FIELDS TERMINATED BY '\t'
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 8 ROWS
+(wahlkreiscode, wahlkreisname, gesamt17, m17, f17, gesamt16, m16, f16,  gesamt15, m15, f15,  gesamt14, m14, f14,  gesamt13, m13, f13,  gesamt12, m12, f12,  gesamt11, m11, f11,  gesamt10, m10, f10,  gesamt09, m09, f09,  gesamt08, m08, f08,  gesamt07, m07, f07,  gesamt06, m06, f06)
+;
+
+/*In order to get population density, we need surface area of the different voting districts
+DROP TABLE flaeche;
+CREATE TABLE flaeche (
+	datum VARCHAR(50) DEFAULT NULL,
+    wahlkreiscode VARCHAR(50) DEFAULT NULL,
+    wahlkreisname VARCHAR(50) DEFAULT NULL,
+    flaeche VARCHAR(50) DEFAULT NULL,	
+    idKey INT AUTO_INCREMENT,
+    PRIMARY KEY (idKey),
+    INDEX name_idx (idKey)
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
+
+
+LOAD DATA INFILE 'C://ProgramData//MySQL//MySQL Server 8.0//Uploads//Flaeche.csv'
+INTO TABLE flaeche
+FIELDS TERMINATED BY '\t'
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 6 ROWS
+(datum, wahlkreiscode, wahlkreisname, flaeche);
