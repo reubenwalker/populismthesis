@@ -2,15 +2,21 @@
 An Investigation of the Relationship Between Rural Flight and Far Right Voting Tendencies in European Democracies
 
 DATA COLLECTION FOR GERMANY AND SPAIN
+
 GERMANY:
 Downloaded following data from Regionaldatenbank Deutschland
 https://www.regionalstatistik.de/genesis/online/
 
 Electoral data by voter district for 2017
+
 Emigration by administrative district for 2013-2017
+
 Population by administrative district for 2013
+
 Territorial area in square kilometers by administrative district
+
 Secondary school graduates with college preparatory degree by administrative district for 2013-2017
+
 Unemployment by administrative district for 2017
 
 SPAIN:
