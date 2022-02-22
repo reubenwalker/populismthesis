@@ -31,7 +31,7 @@ https://www.educacionyfp.gob.es/en/servicios-alciudadano/estadisticas/indicadore
 Secondary school graduates with a college preparatory degree by autonomous
 community for 2019
 
-Unemployment rate by autonomous community for 2019 from 
+Unemployment rate by autonomous community for 2019 
 
 DATA MANIPULATION
 
